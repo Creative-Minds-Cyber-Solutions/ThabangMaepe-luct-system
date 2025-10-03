@@ -1,38 +1,74 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.App, .d-flex.flex-column.min-vh-100 {
+  font-family: 'Segoe UI', sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
+  background-image: url('/public/585.png'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+  color: #fff;
 }
 
-.App-link {
-  color: #61dafb;
+.App::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: -1;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+/* Flex wrapper for content to push footer down */
+.flex-grow-1 {
+  flex: 1 0 auto;
+  padding: 20px;
+}
+
+/* Card containers for forms & dashboard */
+.card-container, .login-container, .dashboard {
+  background: rgba(255, 255, 255, 0.95);
+  color: #000;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 900px;
+  margin: 20px auto 60px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+/* Logo container with dark overlay */
+.logo-container {
+  margin: 30px auto 10px;
+  background: rgba(0,0,0,0.6);
+  padding: 15px 30px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.logo-container img {
+  max-width: 150px;
+  height: auto;
+  display: block;
+}
+
+/* Footer styling */
+.app-footer {
+  background-color: #fff;
+  color: #333;
+  text-align: center;
+  padding: 12px;
+  font-size: 0.9rem;
+  border-top: 1px solid #ccc;
+  flex-shrink: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-container, .login-container, .dashboard {
+    padding: 20px;
+    margin: 15px auto 60px;
   }
 }
+
