@@ -1,7 +1,12 @@
 // backend/server.js
+require('dotenv').config(); // <- Add this at the very top
+
 const express = require('express');
 const cors = require('cors');
 const app = express();
+
+// Import DB (so connection happens)
+const db = require('./db'); // make sure your db.js uses process.env
 
 // Import routes
 const authRoutes = require('./routes/auth');        // login & register
