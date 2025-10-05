@@ -10,6 +10,7 @@
     "axios": "^1.12.2",
     "bcryptjs": "^3.0.2",
     "bootstrap": "^5.3.8",
+    "dotenv": "^17.2.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.3",
