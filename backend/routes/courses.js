@@ -3,10 +3,6 @@ const router = express.Router();
 const db = require('../db');
 const { authenticateToken, authorizeRoles } = require('../middleware/auth');
 
-/**
- * GET /courses
- * Fetch courses filtered by role and department
- */
 router.get('/courses', authenticateToken, (req, res) => {
     const user = req.user; // from JWT
     let query = `
@@ -23,7 +19,7 @@ router.get('/courses', authenticateToken, (req, res) => {
         params.push(user.department);
     } 
     // PL sees all courses (no filter)
-    // Optionally, Student/Lecturer can see only their faculty
+    // Student/Lecturer can see only their faculty
     else if (user.role === 'Lecturer' || user.role === 'Student') {
         query += ` WHERE c.faculty = ?`;
         params.push(user.faculty);
@@ -35,11 +31,6 @@ router.get('/courses', authenticateToken, (req, res) => {
     });
 });
 
-/**
- * POST /courses
- * Add a new course
- * Accessible only by PL & PRL
- */
 router.post('/courses', authenticateToken, authorizeRoles('PL', 'PRL'), (req, res) => {
     const { course_name, course_code, faculty, department, lecturer_id } = req.body;
 

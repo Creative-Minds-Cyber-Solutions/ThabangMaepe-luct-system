@@ -1,13 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router();
-const db = require('../db'); // use pool
+const db = require('../db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'luct_secret';
 
-// ----------------- REGISTER -----------------
+// REGISTER
 router.post('/register', async (req, res) => {
     const { username, password, role, department } = req.body;
     const faculty = 'FICT';
@@ -52,7 +52,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// ----------------- LOGIN -----------------
+//LOGIN
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
     if (!username || !password)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Navbar from './Navbar';
 import Classes from './Classes';
 import ReportForm from './ReportForm';
@@ -9,16 +9,16 @@ import Courses from './Courses';
 function Dashboard({ role, userId, username, department, faculty, setRole, setUserId }) {
     const [dashboardView, setDashboardView] = useState('');
 
-    const menuItems = {
+    const menuItems = useMemo(() => ({
         Student: ['Monitor Classes', 'Rate Lectures'],
         Lecturer: ['Submit Report', 'Monitor Classes', 'Ratings'],
         PRL: ['Courses', 'Reports', 'Monitor Classes', 'Ratings'],
         PL: ['Courses', 'Reports', 'Monitor Classes', 'Ratings'],
-    };
+    }), []);
 
     useEffect(() => {
         if (role) setDashboardView(menuItems[role][0]);
-    }, [role]);
+    }, [role, menuItems]);
 
     const renderComponent = () => {
         switch (dashboardView) {

@@ -1,15 +1,9 @@
-// backend/routes/reports.js
+// reports.js
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const { authenticateToken, authorizeRoles } = require('../middleware/auth');
 
-/**
- * GET /reports
- * Fetch all reports
- * Optional query params: lecturer_id, faculty
- * Accessible by all logged-in users
- */
 router.get('/reports', authenticateToken, (req, res) => {
     const { lecturer_id, faculty } = req.query;
 
@@ -46,11 +40,7 @@ router.get('/reports', authenticateToken, (req, res) => {
     });
 });
 
-/**
- * POST /reports
- * Submit a lecture report
- * Accessible only by Lecturers
- */
+
 router.post('/reports', authenticateToken, authorizeRoles('Lecturer'), (req, res) => {
     const {
         lecturer_id,
@@ -89,11 +79,7 @@ router.post('/reports', authenticateToken, authorizeRoles('Lecturer'), (req, res
     });
 });
 
-/**
- * PUT /reports/:id/feedback
- * Add feedback to a report
- * Accessible only by PRL and PL
- */
+
 router.put('/reports/:id/feedback', authenticateToken, authorizeRoles('PRL', 'PL'), (req, res) => {
     const reportId = req.params.id;
     const { feedback } = req.body;

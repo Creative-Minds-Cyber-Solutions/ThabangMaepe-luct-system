@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import api from '../api';
 
 function Classes({ role, userId, department, faculty, showReports }) {
     const [classes, setClasses] = useState([]);
     const [attendance, setAttendance] = useState([]);
-    const [classAttendance, setClassAttendance] = useState({});
     const [reports, setReports] = useState([]);
     const [feedback, setFeedback] = useState({});
 
-    const authHeader = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+    const authHeader = useMemo(() => ({
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+    }), []);
 
     useEffect(() => {
         api.get('/classes', { headers: authHeader })
@@ -24,14 +25,14 @@ function Classes({ role, userId, department, faculty, showReports }) {
         if (showReports) {
             api.get('/reports', { headers: authHeader })
                 .then(res => {
-                    const filteredReports = (role === 'PRL') 
+                    const filteredReports = role === 'PRL' 
                         ? res.data.filter(r => r.department === department) 
                         : res.data;
                     setReports(filteredReports);
                 })
                 .catch(err => console.error(err));
         }
-    }, [role, showReports, department]);
+    }, [role, showReports, department, authHeader]);
 
     const handleMarkAttendance = (classId) => {
         api.post('/attendance', { class_id: classId }, { headers: authHeader })

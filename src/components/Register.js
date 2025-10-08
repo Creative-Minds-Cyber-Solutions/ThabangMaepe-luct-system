@@ -46,7 +46,7 @@ function Register() {
         <h2 className="mb-4 text-center">Register Account</h2>
         {error && <div className="alert alert-danger">{error}</div>}
 
-        {/* Username */}
+        
         <div className="mb-3">
           <input
             type="text"
@@ -57,7 +57,7 @@ function Register() {
           />
         </div>
 
-        {/* Password */}
+        
         <div className="mb-3">
           <input
             type="password"
@@ -68,7 +68,7 @@ function Register() {
           />
         </div>
 
-        {/* Role */}
+        
         <div className="mb-3">
           <select
             className="form-select"
@@ -80,7 +80,7 @@ function Register() {
           </select>
         </div>
 
-        {/* Department */}
+        
         <div className="mb-3">
           <select
             className="form-select"
@@ -94,7 +94,7 @@ function Register() {
           </select>
         </div>
 
-        {/* Faculty (display only) */}
+        
         <div className="mb-3">
           <input
             type="text"
@@ -105,7 +105,7 @@ function Register() {
           />
         </div>
 
-        {/* Register Button */}
+        
         <button
           className="btn btn-success w-100"
           onClick={handleRegister}

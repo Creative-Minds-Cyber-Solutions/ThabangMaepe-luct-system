@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import api from '../api';
 
 function Courses({ role, userDepartment }) {
@@ -7,31 +7,31 @@ function Courses({ role, userDepartment }) {
     const [form, setForm] = useState({
         course_name: '',
         course_code: '',
-        faculty: 'FICT', // always FICT
-        department: '',  // PL selects
+        faculty: 'FICT',
+        department: '',
         lecturer_id: ''
     });
 
-    const authHeader = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+    const authHeader = useMemo(() => ({
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+    }), []);
 
     useEffect(() => {
-        // Fetch courses
         api.get('/courses', { headers: authHeader })
            .then(res => {
-               const filtered = (role === 'PRL') 
+               const filtered = role === 'PRL' 
                    ? res.data.filter(c => c.department === userDepartment)
                    : res.data;
                setCourses(filtered);
            })
            .catch(err => console.error(err));
 
-        // Fetch lecturers only if PL
         if(role === 'PL') {
             api.get('/users', { headers: authHeader })
                .then(res => setLecturers(res.data.filter(u => u.role === 'Lecturer')))
                .catch(err => console.error(err));
         }
-    }, [role, userDepartment]);
+    }, [role, userDepartment, authHeader]);
 
     const handleAddCourse = () => {
         if(!form.course_name || !form.course_code || !form.department || !form.lecturer_id) {
@@ -41,7 +41,6 @@ function Courses({ role, userDepartment }) {
         api.post('/courses', form, { headers: authHeader })
             .then(() => {
                 alert('Course added');
-                // Refresh courses
                 api.get('/courses', { headers: authHeader })
                    .then(res => setCourses(res.data));
             })

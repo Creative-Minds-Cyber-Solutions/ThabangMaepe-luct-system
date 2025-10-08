@@ -1,15 +1,9 @@
-// backend/routes/enrollments.js
+// enrollments.js
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const { authenticateToken, authorizeRoles } = require('../middleware/auth');
 
-/**
- * GET /enrollments
- * View all enrollments (restricted)
- * - PL and PRL can view all
- * - Students can view their own
- */
 router.get('/enrollments', authenticateToken, (req, res) => {
   const { role, id: userId } = req.user;
 
@@ -39,11 +33,7 @@ router.get('/enrollments', authenticateToken, (req, res) => {
   });
 });
 
-/**
- * POST /enrollments
- * Add a new enrollment
- * Only Program Leader (PL) or Principal Lecturer (PRL)
- */
+
 router.post('/enrollments', authenticateToken, authorizeRoles('PL', 'PRL'), (req, res) => {
   const { student_id, class_id } = req.body;
 
@@ -73,11 +63,7 @@ router.post('/enrollments', authenticateToken, authorizeRoles('PL', 'PRL'), (req
   );
 });
 
-/**
- * DELETE /enrollments/:id
- * Remove a student from a class
- * Only PL & PRL
- */
+
 router.delete('/enrollments/:id', authenticateToken, authorizeRoles('PL', 'PRL'), (req, res) => {
   const enrollmentId = req.params.id;
 

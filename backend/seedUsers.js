@@ -1,4 +1,4 @@
-// backend/seedUsers.js
+// seedUsers.js
 const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
 
@@ -64,9 +64,9 @@ async function seed() {
       });
     }
 
-    console.log('✅ Seeding complete! All accounts use password: 1234');
+    console.log(' Seeding complete! All accounts use password: 1234');
   } catch (err) {
-    console.error('❌ Seeding error:', err);
+    console.error('Seeding error:', err);
   } finally {
     db.end();
   }
