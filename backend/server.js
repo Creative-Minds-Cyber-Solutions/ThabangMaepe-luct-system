@@ -1,37 +1,34 @@
-// backend/server.js
-require('dotenv').config(); // <- Add this at the very top
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
 const app = express();
 
-// Import DB (so connection happens)
-const db = require('./db'); // make sure your db.js uses process.env
+// Import DB
+const db = require('./db');
 
 // Import routes
-const authRoutes = require('./routes/auth');        // login & register
-const userRoutes = require('./routes/users');       // user management
-const courseRoutes = require('./routes/courses');   // courses
-const classRoutes = require('./routes/classes');    // classes
-const reportRoutes = require('./routes/reports');   // reports
-const ratingRoutes = require('./routes/ratings');   // ratings
+const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/users');
+const courseRoutes = require('./routes/courses');
+const classRoutes = require('./routes/classes');
+const reportRoutes = require('./routes/reports');
+const ratingRoutes = require('./routes/ratings');
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// API routes
-app.use('/api', authRoutes);
-app.use('/api', userRoutes);
-app.use('/api', courseRoutes);
-app.use('/api', classRoutes);
-app.use('/api', reportRoutes);
-app.use('/api', ratingRoutes);
+// Mount routes with consistent prefix
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/classes', classRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/ratings', ratingRoutes);
 
-// Default route for testing
-app.get('/', (req, res) => {
-    res.send('LUCT API running');
-});
+// Test route
+app.get('/', (req, res) => res.send('LUCT API running'));
 
 // Start server
 const PORT = process.env.PORT || 5000;

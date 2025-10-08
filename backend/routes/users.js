@@ -1,24 +1,20 @@
-// backend/routes/users.js
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const { authenticateToken, authorizeRoles } = require('../middleware/auth');
 
-//users - only PL & PRL can view all users
-router.get('/users', authenticateToken, authorizeRoles('PL', 'PRL'), (req, res) => {
-    db.query(
-        'SELECT id, username, role, faculty FROM users',
-        (err, results) => {
-            if (err) return res.status(500).json(err);
-            res.json(results);
-        }
-    );
+// GET /api/users/  → all users (PL & PRL only)
+router.get('/', authenticateToken, authorizeRoles('PL', 'PRL'), (req, res) => {
+    db.query('SELECT id, username, role, faculty, department FROM users', (err, results) => {
+        if (err) return res.status(500).json(err);
+        res.json(results);
+    });
 });
 
-
-router.get('/users/filter', authenticateToken, authorizeRoles('PL', 'PRL'), (req, res) => {
+// GET /api/users/filter?faculty=FICT  → filtered users
+router.get('/filter', authenticateToken, authorizeRoles('PL', 'PRL'), (req, res) => {
     const { faculty } = req.query;
-    let query = 'SELECT id, username, role, faculty FROM users';
+    let query = 'SELECT id, username, role, faculty, department FROM users';
     const params = [];
 
     if (faculty) {
