@@ -1,75 +1,94 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../api';
 
-function Login({ setRole, setUserId, setUsername }) {
-    const [username, setUserInput] = useState('');
-    const [password, setPassword] = useState('');
-    const navigate = useNavigate();
+function Login({ setRole, setUserId, setUsername, setDepartment, setFaculty }) {
+  const [username, setUserInput] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-    const handleLogin = async () => {
-        if (!username || !password) {
-            alert('Please enter both username and password');
-            return;
-        }
+  const handleLogin = async () => {
+    setError('');
+    if (!username || !password) {
+      setError('Please enter both username and password');
+      return;
+    }
 
-        try {
-            const res = await api.post('/login', { username, password });
+    setLoading(true);
+    try {
+      const res = await api.post('/login', { username, password });
 
-            // Store token and user info in localStorage
-            localStorage.setItem('token', res.data.token);
-            localStorage.setItem('role', res.data.role);
-            localStorage.setItem('userId', res.data.id);
-            localStorage.setItem('username', res.data.username);
+      const { token, role, id, username: name, department, faculty } = res.data;
 
-            // Update state
-            setRole(res.data.role);
-            setUserId(res.data.id);
-            setUsername(res.data.username);
+      // Save to localStorage
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+      localStorage.setItem('userId', id);
+      localStorage.setItem('username', name);
+      localStorage.setItem('department', department);
+      localStorage.setItem('faculty', faculty);
 
-            // Redirect to dashboard
-            navigate('/dashboard');
-        } catch (err) {
-            alert(err.response?.data?.message || 'Login failed');
-        }
-    };
+      // Update parent states
+      setRole(role);
+      setUserId(id);
+      setUsername(name);
+      setDepartment(department);
+      setFaculty(faculty);
 
-    return (
-        <div className="login-page">
-            <div className="logo-container">
-                <img src="/logo-dark.png" alt="LUCT Logo" />
-            </div>
-            <div className="login-container card-container">
-                <h2 className="mb-4 text-center">LUCT Dashboard Login</h2>
-                <div className="mb-3">
-                    <label className="form-label">Username</label>
-                    <input 
-                        type="text" 
-                        className="form-control" 
-                        placeholder="Enter username" 
-                        value={username} 
-                        onChange={e => setUserInput(e.target.value)} 
-                    />
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Password</label>
-                    <input 
-                        type="password" 
-                        className="form-control" 
-                        placeholder="Enter password" 
-                        value={password} 
-                        onChange={e => setPassword(e.target.value)} 
-                    />
-                </div>
-                <button 
-                    className="btn btn-primary w-100 mt-2" 
-                    onClick={handleLogin}
-                >
-                    Login
-                </button>
-            </div>
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="login-page d-flex flex-column justify-content-center align-items-center vh-100">
+      <div className="logo-container text-center mb-3">
+        <img src="/logo-dark.png" alt="LUCT Logo" />
+      </div>
+
+      <div className="card p-4 shadow" style={{ width: '400px' }}>
+        <h2 className="mb-4 text-center">LUCT Dashboard Login</h2>
+        {error && <div className="alert alert-danger">{error}</div>}
+
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Username"
+            value={username}
+            onChange={e => setUserInput(e.target.value)}
+          />
         </div>
-    );
+
+        <div className="mb-3">
+          <input
+            type="password"
+            className="form-control"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+        </div>
+
+        <button
+          className="btn btn-primary w-100"
+          onClick={handleLogin}
+          disabled={loading}
+        >
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
+
+        <p className="mt-3 text-center">
+          Don’t have an account? <Link to="/register">Register here</Link>
+        </p>
+      </div>
+    </div>
+  );
 }
 
 export default Login;

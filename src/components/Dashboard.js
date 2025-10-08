@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import ReportForm from './ReportForm';
+import Navbar from './Navbar';
 import Classes from './Classes';
+import ReportForm from './ReportForm';
+import Reports from './Reports';
 import Ratings from './Ratings';
 import Courses from './Courses';
-import Navbar from './Navbar';
 
-function Dashboard({ role, userId, username, setRole, setUserId }) {
+function Dashboard({ role, userId, username, department, faculty, setRole, setUserId }) {
     const [dashboardView, setDashboardView] = useState('');
 
     const menuItems = {
@@ -16,24 +17,28 @@ function Dashboard({ role, userId, username, setRole, setUserId }) {
     };
 
     useEffect(() => {
-        if (role) {
-            setDashboardView(menuItems[role][0]);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [role]); 
+        if (role) setDashboardView(menuItems[role][0]);
+    }, [role]);
 
     const renderComponent = () => {
         switch (dashboardView) {
             case 'Submit Report':
                 return <ReportForm lecturerId={userId} />;
             case 'Monitor Classes':
-                return <Classes role={role} userId={userId} />;
+                return (
+                    <Classes
+                        role={role}
+                        userId={userId}
+                        department={department}
+                        faculty={faculty}
+                    />
+                );
             case 'Rate Lectures':
                 return <Ratings userId={userId} />;
             case 'Courses':
-                return <Courses role={role} />;
+                return <Courses role={role} department={department} faculty={faculty} />;
             case 'Reports':
-                return <Classes role={role} showReports={true} />;
+                return <Reports role={role} department={department} faculty={faculty} />;
             default:
                 return null;
         }
@@ -52,6 +57,7 @@ function Dashboard({ role, userId, username, setRole, setUserId }) {
 
             <div className="dashboard card-container">
                 <h3>Welcome, {username}!</h3>
+                <p>Department: {department} ({faculty})</p>
                 <p>Select an option from the menu:</p>
 
                 <div className="d-flex flex-wrap justify-content-center mb-4">
@@ -66,7 +72,9 @@ function Dashboard({ role, userId, username, setRole, setUserId }) {
                     ))}
                 </div>
 
-                {renderComponent()}
+                <div className="dashboard-content">
+                    {renderComponent()}
+                </div>
             </div>
         </>
     );
