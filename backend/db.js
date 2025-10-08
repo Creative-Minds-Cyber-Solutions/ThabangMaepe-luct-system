@@ -1,20 +1,25 @@
+// backend/db.js
 require('dotenv').config();
 const mysql = require('mysql2');
 
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,        // e.g., sql8.freesqldatabase.com
-    user: process.env.DB_USER,        // your hosted DB username
-    password: process.env.DB_PASS,    // your hosted DB password
-    database: process.env.DB_NAME,    // your hosted DB name
+const db = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
     port: process.env.DB_PORT || 3306,
-    ssl: false                         // important for free hosts
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-db.connect(err => {
+// Test connection
+db.getConnection((err, connection) => {
     if (err) {
-        console.error('❌ MySQL connection failed:', err.message);
+        console.error('❌ MySQL connection failed:', err);
     } else {
         console.log('✅ Connected to hosted MySQL database');
+        connection.release();
     }
 });
 
