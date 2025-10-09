@@ -7,7 +7,7 @@ function Reports({ role, department, faculty }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [feedback, setFeedback] = useState({});
-    
+
     // SEARCH & FILTER STATES (Extra Credit)
     const [searchTerm, setSearchTerm] = useState('');
     const [filters, setFilters] = useState({
@@ -23,7 +23,7 @@ function Reports({ role, department, faculty }) {
     const fetchReports = async () => {
         setLoading(true);
         setError('');
-        
+
         try {
             // Build query parameters
             const params = new URLSearchParams();
@@ -59,12 +59,12 @@ function Reports({ role, department, faculty }) {
         }
 
         try {
-            await api.put(`/reports/${reportId}/feedback`, { 
-                feedback: feedback[reportId] 
+            await api.put(`/reports/${reportId}/feedback`, {
+                feedback: feedback[reportId]
             });
             alert('Feedback submitted successfully');
             setFeedback({ ...feedback, [reportId]: '' });
-            fetchReports(); // Refresh to show updated feedback
+            fetchReports();
         } catch (err) {
             console.error('Submit feedback error:', err);
             alert(err.response?.data?.message || 'Failed to submit feedback');
@@ -102,7 +102,7 @@ function Reports({ role, department, faculty }) {
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h4>Lecture Reports</h4>
                 {/* EXCEL EXPORT BUTTON (Extra Credit) */}
-                <button 
+                <button
                     className="btn btn-success btn-sm"
                     onClick={handleExportExcel}
                 >
@@ -184,13 +184,13 @@ function Reports({ role, department, faculty }) {
                                         {report.course_name} ({report.course_code})
                                     </h6>
                                     <p className="mb-1">
-                                        <strong>Class:</strong> {report.class_name} | 
-                                        <strong> Lecturer:</strong> {report.lecturer_name}
+                                        <strong>Class:</strong> {report.class_name} |{' '}
+                                        <strong>Lecturer:</strong> {report.lecturer_name}
                                     </p>
                                     <p className="mb-1">
-                                        <strong>Date:</strong> {new Date(report.date_of_lecture).toLocaleDateString()} | 
-                                        <strong> Venue:</strong> {report.venue} | 
-                                        <strong> Time:</strong> {report.scheduled_time}
+                                        <strong>Date:</strong> {new Date(report.date_of_lecture).toLocaleDateString()} |{' '}
+                                        <strong>Venue:</strong> {report.venue} |{' '}
+                                        <strong>Time:</strong> {report.scheduled_time}
                                     </p>
                                 </div>
                                 <span className="badge bg-success">
@@ -233,10 +233,12 @@ function Reports({ role, department, faculty }) {
                                                 className="form-control"
                                                 placeholder="Add feedback..."
                                                 value={feedback[report.id] || ''}
-                                                onChange={e => setFeedback({ 
-                                                    ...feedback, 
-                                                    [report.id]: e.target.value 
-                                                })}
+                                                onChange={e =>
+                                                    setFeedback({
+                                                        ...feedback,
+                                                        [report.id]: e.target.value
+                                                    })
+                                                }
                                             />
                                             <button
                                                 className="btn btn-primary"
@@ -263,4 +265,3 @@ function Reports({ role, department, faculty }) {
 }
 
 export default Reports;
-

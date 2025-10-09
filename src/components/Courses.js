@@ -1,5 +1,5 @@
 // src/components/Courses.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../api';
 
 function Courses({ role, department }) {
@@ -8,10 +8,8 @@ function Courses({ role, department }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [showForm, setShowForm] = useState(false);
-    
-    // SEARCH STATE (Extra Credit)
     const [searchTerm, setSearchTerm] = useState('');
-    
+
     const [form, setForm] = useState({
         course_name: '',
         course_code: '',
@@ -20,14 +18,8 @@ function Courses({ role, department }) {
         lecturer_id: ''
     });
 
-    useEffect(() => {
-        fetchCourses();
-        if (role === 'PL' || role === 'PRL') {
-            fetchLecturers();
-        }
-    }, [role, department]);
-
-    const fetchCourses = async () => {
+    // Fetch courses with useCallback to prevent ESLint warnings
+    const fetchCourses = useCallback(async () => {
         setLoading(true);
         setError('');
 
@@ -41,16 +33,25 @@ function Courses({ role, department }) {
         } finally {
             setLoading(false);
         }
-    };
+    }, [searchTerm]);
 
-    const fetchLecturers = async () => {
+    // Fetch lecturers
+    const fetchLecturers = useCallback(async () => {
         try {
             const res = await api.get('/users/lecturers');
             setLecturers(res.data);
         } catch (err) {
             console.error('Fetch lecturers error:', err);
         }
-    };
+    }, []);
+
+    // Run effects safely with proper dependencies
+    useEffect(() => {
+        fetchCourses();
+        if (role === 'PL' || role === 'PRL') {
+            fetchLecturers();
+        }
+    }, [role, department, fetchCourses, fetchLecturers]);
 
     const handleAddCourse = async (e) => {
         e.preventDefault();
@@ -100,7 +101,7 @@ function Courses({ role, department }) {
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h4>Courses Management</h4>
                 {role === 'PL' && (
-                    <button 
+                    <button
                         className="btn btn-primary"
                         onClick={() => setShowForm(!showForm)}
                     >
@@ -177,7 +178,7 @@ function Courses({ role, department }) {
                 </div>
             )}
 
-            {/* SEARCH BAR (Extra Credit) */}
+            {/* SEARCH BAR */}
             <div className="card mb-3 p-3">
                 <div className="row g-2">
                     <div className="col-md-9">
@@ -192,11 +193,17 @@ function Courses({ role, department }) {
                     </div>
                     <div className="col-md-3">
                         <div className="d-flex gap-2">
-                            <button className="btn btn-primary flex-grow-1" onClick={handleSearch}>
+                            <button
+                                className="btn btn-primary flex-grow-1"
+                                onClick={handleSearch}
+                            >
                                 <i className="bi bi-search"></i> Search
                             </button>
                             {searchTerm && (
-                                <button className="btn btn-secondary" onClick={handleClearSearch}>
+                                <button
+                                    className="btn btn-secondary"
+                                    onClick={handleClearSearch}
+                                >
                                     <i className="bi bi-x"></i>
                                 </button>
                             )}
@@ -216,8 +223,8 @@ function Courses({ role, department }) {
                 </div>
             ) : courses.length === 0 ? (
                 <div className="alert alert-info">
-                    {searchTerm 
-                        ? 'No courses found matching your search.' 
+                    {searchTerm
+                        ? 'No courses found matching your search.'
                         : 'No courses available.'}
                 </div>
             ) : (

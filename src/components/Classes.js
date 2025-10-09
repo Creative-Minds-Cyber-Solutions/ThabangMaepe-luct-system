@@ -1,5 +1,5 @@
 // src/components/Classes.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../api';
 
 function Classes({ role, userId, department, faculty }) {
@@ -7,23 +7,13 @@ function Classes({ role, userId, department, faculty }) {
     const [attendance, setAttendance] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    
-    // SEARCH STATE (Extra Credit)
     const [searchTerm, setSearchTerm] = useState('');
 
-    useEffect(() => {
-        fetchClasses();
-        if (role === 'Student') {
-            fetchAttendance();
-        }
-    }, [role]);
-
-    const fetchClasses = async () => {
+    // Fetch classes with useCallback to prevent ESLint dependency warnings
+    const fetchClasses = useCallback(async () => {
         setLoading(true);
         setError('');
-
         try {
-            // Build query with search parameter
             const params = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : '';
             const res = await api.get(`/classes${params}`);
             setClasses(res.data);
@@ -33,16 +23,25 @@ function Classes({ role, userId, department, faculty }) {
         } finally {
             setLoading(false);
         }
-    };
+    }, [searchTerm]);
 
-    const fetchAttendance = async () => {
+    // Fetch attendance
+    const fetchAttendance = useCallback(async () => {
         try {
             const res = await api.get('/attendance');
             setAttendance(res.data.map(a => a.class_id));
         } catch (err) {
             console.error('Fetch attendance error:', err);
         }
-    };
+    }, []);
+
+    // useEffect that depends on role, fetchClasses, and fetchAttendance
+    useEffect(() => {
+        fetchClasses();
+        if (role === 'Student') {
+            fetchAttendance();
+        }
+    }, [role, fetchClasses, fetchAttendance]);
 
     const handleMarkAttendance = async (classId) => {
         try {
@@ -68,7 +67,7 @@ function Classes({ role, userId, department, faculty }) {
         <div className="classes-container">
             <h4>My Classes</h4>
 
-            {/* SEARCH BAR (Extra Credit) */}
+            {/* SEARCH BAR */}
             <div className="card mb-3 p-3">
                 <div className="row g-2">
                     <div className="col-md-9">
@@ -83,15 +82,15 @@ function Classes({ role, userId, department, faculty }) {
                     </div>
                     <div className="col-md-3">
                         <div className="d-flex gap-2">
-                            <button 
-                                className="btn btn-primary flex-grow-1" 
+                            <button
+                                className="btn btn-primary flex-grow-1"
                                 onClick={handleSearch}
                             >
                                 <i className="bi bi-search"></i> Search
                             </button>
                             {searchTerm && (
-                                <button 
-                                    className="btn btn-secondary" 
+                                <button
+                                    className="btn btn-secondary"
                                     onClick={handleClearSearch}
                                 >
                                     <i className="bi bi-x"></i>
@@ -112,8 +111,8 @@ function Classes({ role, userId, department, faculty }) {
                 </div>
             ) : classes.length === 0 ? (
                 <div className="alert alert-info">
-                    {searchTerm 
-                        ? 'No classes found matching your search.' 
+                    {searchTerm
+                        ? 'No classes found matching your search.'
                         : 'No classes available.'}
                 </div>
             ) : (
@@ -159,7 +158,7 @@ function Classes({ role, userId, department, faculty }) {
                                         </div>
                                     )}
 
-                                    {/* Department/Faculty info for other roles */}
+                                    {/* Department/Faculty info */}
                                     {role !== 'Student' && cls.department && (
                                         <div className="mt-3">
                                             <span className="badge bg-secondary">
