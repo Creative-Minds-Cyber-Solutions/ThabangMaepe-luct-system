@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
@@ -22,7 +23,7 @@ function App() {
             <div className="d-flex flex-column min-vh-100 App">
                 <div className="flex-grow-1">
                     <Routes>
-                        {/* ✅ Login route */}
+                        {/* Login route */}
                         <Route
                             path="/"
                             element={isLoggedIn ? (
@@ -40,7 +41,7 @@ function App() {
                             )}
                         />
 
-                        {/* ✅ Login (explicit path) */}
+                        {/* Login (explicit path) */}
                         <Route
                             path="/login"
                             element={isLoggedIn ? (

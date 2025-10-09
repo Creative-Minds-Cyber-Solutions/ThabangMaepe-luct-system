@@ -12,86 +12,121 @@ router.post('/register', async (req, res) => {
     const { username, password, role, department } = req.body;
     const faculty = 'FICT';
 
-    if (!username || !password || !role || !department)
+    // Validate fields
+    if (!username || !password || !role || !department) {
         return res.status(400).json({ message: 'All fields are required' });
+    }
 
+    // Only allow Student and Lecturer to self-register
     const allowedRoles = ['Student', 'Lecturer'];
-    if (!allowedRoles.includes(role))
+    if (!allowedRoles.includes(role)) {
         return res.status(403).json({ message: 'Unauthorized role selection' });
+    }
 
+    // Allowed departments
     const allowedDepartments = [
         'Information Technology',
         'Business Information Technology',
         'Software Engineering'
     ];
-    if (!allowedDepartments.includes(department))
+    if (!allowedDepartments.includes(department)) {
         return res.status(400).json({ message: 'Invalid department selection' });
+    }
 
-    if (password.length < 4)
+    if (password.length < 4) {
         return res.status(400).json({ message: 'Password must be at least 4 characters' });
+    }
 
     try {
-        db.query('SELECT * FROM users WHERE username = ?', [username], async (err, results) => {
-            if (err) return res.status(500).json({ message: 'DB error', error: err.message });
-            if (results.length > 0)
-                return res.status(400).json({ message: 'Username already exists' });
+        // Check if username exists
+        const [existing] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+        
+        if (existing.length > 0) {
+            return res.status(400).json({ message: 'Username already exists' });
+        }
 
-            const hash = await bcrypt.hash(password, 10);
+        // Hash password
+        const hash = await bcrypt.hash(password, 10);
 
-            db.query(
-                'INSERT INTO users (username, password, role, faculty, department) VALUES (?, ?, ?, ?, ?)',
-                [username, hash, role, faculty, department],
-                (err) => {
-                    if (err) return res.status(500).json({ message: 'DB error', error: err.message });
-                    res.status(201).json({ message: 'User registered successfully' });
-                }
-            );
-        });
+        // Insert user
+        await db.query(
+            'INSERT INTO users (username, password, role, faculty, department) VALUES (?, ?, ?, ?, ?)',
+            [username, hash, role, faculty, department]
+        );
+
+        res.status(201).json({ message: 'User registered successfully' });
     } catch (err) {
+        console.error('Registration error:', err);
         res.status(500).json({ message: 'Server error', error: err.message });
     }
 });
 
-//LOGIN
-router.post('/login', (req, res) => {
+// LOGIN
+router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    if (!username || !password)
+
+    if (!username || !password) {
         return res.status(400).json({ message: 'Missing credentials' });
+    }
 
-    // Use pool.query and handle ECONNRESET
-    db.query('SELECT * FROM users WHERE username = ?', [username], async (err, results) => {
-        if (err) {
-            console.error('DB query error:', err);
-            return res.status(500).json({ message: 'Database connection error', error: err.message });
-        }
+    try {
+        const [results] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
 
-        if (results.length === 0)
+        if (results.length === 0) {
             return res.status(401).json({ message: 'Invalid credentials' });
-
-        try {
-            const user = results[0];
-            const match = await bcrypt.compare(password, user.password);
-            if (!match) return res.status(401).json({ message: 'Invalid credentials' });
-
-            const token = jwt.sign(
-                { id: user.id, role: user.role, department: user.department, faculty: user.faculty },
-                JWT_SECRET,
-                { expiresIn: '7d' }
-            );
-
-            res.json({
-                token,
-                role: user.role,
-                username: user.username,
-                department: user.department,
-                faculty: user.faculty,
-                id: user.id
-            });
-        } catch (error) {
-            console.error('Login error:', error);
-            res.status(500).json({ message: 'Server error', error: error.message });
         }
-    });
+
+        const user = results[0];
+        const match = await bcrypt.compare(password, user.password);
+        
+        if (!match) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { 
+                id: user.id, 
+                role: user.role, 
+                department: user.department, 
+                faculty: user.faculty,
+                username: user.username
+            },
+            JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.json({
+            token,
+            role: user.role,
+            username: user.username,
+            department: user.department,
+            faculty: user.faculty,
+            id: user.id
+        });
+    } catch (err) {
+        console.error('Login error:', err);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+});
+
+// Get current user profile
+router.get('/profile', require('../middleware/auth').authenticateToken, async (req, res) => {
+    try {
+        const [users] = await db.query(
+            'SELECT id, username, role, faculty, department FROM users WHERE id = ?',
+            [req.user.id]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json(users[0]);
+    } catch (err) {
+        console.error('Profile error:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
 });
 
 module.exports = router;

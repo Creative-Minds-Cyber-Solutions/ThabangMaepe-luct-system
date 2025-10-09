@@ -21,13 +21,13 @@
   z-index: -1;
 }
 
-/* Flex wrapper for content to push footer down */
+
 .flex-grow-1 {
   flex: 1 0 auto;
   padding: 20px;
 }
 
-/* Card containers for forms & dashboard */
+
 .card-container, .login-container, .dashboard {
   background: rgba(255, 255, 255, 0.95);
   color: #000;
@@ -38,7 +38,7 @@
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
 }
 
-/* Logo container with dark overlay */
+
 .logo-container {
   margin: 30px auto 10px;
   background: rgba(0,0,0,0.6);
@@ -53,7 +53,7 @@
   display: block;
 }
 
-/* Footer styling */
+
 .app-footer {
   background-color: #fff;
   color: #333;
@@ -64,7 +64,7 @@
   flex-shrink: 0;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .card-container, .login-container, .dashboard {
     padding: 20px;
