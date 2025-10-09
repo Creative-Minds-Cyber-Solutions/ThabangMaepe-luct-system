@@ -1,3 +1,4 @@
+// src/components/Login.js
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api';
@@ -18,7 +19,8 @@ function Login({ setRole, setUserId, setUsername, setDepartment, setFaculty }) {
 
     setLoading(true);
     try {
-      const res = await api.post('/login', { username, password });
+      // No need to convert password to string here, api.js handles it
+      const res = await api.post('/auth/login', { username, password });
 
       const { token, role, id, username: name, department, faculty } = res.data;
 

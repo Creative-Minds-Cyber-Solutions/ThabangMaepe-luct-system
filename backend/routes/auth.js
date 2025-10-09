@@ -33,7 +33,7 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({ message: 'Invalid department selection' });
     }
 
-    if (password.length < 4) {
+    if (String(password).length < 4) {
         return res.status(400).json({ message: 'Password must be at least 4 characters' });
     }
 
@@ -45,8 +45,8 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'Username already exists' });
         }
 
-        // Hash password
-        const hash = await bcrypt.hash(password, 10);
+        // Hash password as string
+        const hash = await bcrypt.hash(String(password), 10);
 
         // Insert user
         await db.query(
@@ -77,7 +77,7 @@ router.post('/login', async (req, res) => {
         }
 
         const user = results[0];
-        const match = await bcrypt.compare(password, user.password);
+        const match = await bcrypt.compare(String(password), user.password);
         
         if (!match) {
             return res.status(401).json({ message: 'Invalid credentials' });

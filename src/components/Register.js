@@ -1,3 +1,4 @@
+// src/components/Register.js
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api';
@@ -14,6 +15,7 @@ function Register() {
   const handleRegister = async () => {
     setError('');
     const faculty = 'FICT'; // Automatically set faculty
+
     if (!username || !password || !role || !department) {
       setError('Please fill in all fields');
       return;
@@ -26,6 +28,7 @@ function Register() {
 
     setLoading(true);
     try {
+      // No need to convert password to string here, api.js handles it
       await api.post('/auth/register', { username, password, role, faculty, department });
       alert('Registration successful! You can now log in.');
       navigate('/');
@@ -46,7 +49,6 @@ function Register() {
         <h2 className="mb-4 text-center">Register Account</h2>
         {error && <div className="alert alert-danger">{error}</div>}
 
-        
         <div className="mb-3">
           <input
             type="text"
@@ -57,7 +59,6 @@ function Register() {
           />
         </div>
 
-        
         <div className="mb-3">
           <input
             type="password"
@@ -68,7 +69,6 @@ function Register() {
           />
         </div>
 
-        
         <div className="mb-3">
           <select
             className="form-select"
@@ -80,7 +80,6 @@ function Register() {
           </select>
         </div>
 
-        
         <div className="mb-3">
           <select
             className="form-select"
@@ -94,7 +93,6 @@ function Register() {
           </select>
         </div>
 
-        
         <div className="mb-3">
           <input
             type="text"
@@ -105,7 +103,6 @@ function Register() {
           />
         </div>
 
-        
         <button
           className="btn btn-success w-100"
           onClick={handleRegister}
