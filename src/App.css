@@ -72,3 +72,36 @@
   }
 }
 
+/* Landing Page Styles */
+.landing-page {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+.hero-section {
+  background: rgba(255, 255, 255, 0.95);
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+}
+
+.features-section {
+  background: #f8f9fa;
+}
+
+.roles-section {
+  background: white;
+}
+
+.footer-section {
+  background: #343a40 !important;
+}
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}

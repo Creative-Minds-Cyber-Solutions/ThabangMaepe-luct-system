@@ -4,15 +4,10 @@ import React from 'react';
 function Navbar({ role, username, dashboardView, setDashboardView, setRole, setUserId }) {
 
     const handleLogout = () => {
-        // Clear all localStorage
         localStorage.clear();
-        
-        // Clear state
         setRole('');
         setUserId('');
         setDashboardView('');
-        
-        // Redirect to login
         window.location.href = '/';
     };
 
@@ -27,7 +22,6 @@ function Navbar({ role, username, dashboardView, setDashboardView, setRole, setU
         <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top mb-3 shadow-sm">
             <div className="container-fluid">
                 <span className="navbar-brand fw-bold">
-                    <i className="bi bi-mortarboard-fill me-2"></i>
                     LUCT Dashboard
                 </span>
                 
@@ -51,16 +45,6 @@ function Navbar({ role, username, dashboardView, setDashboardView, setRole, setU
                                     className={`nav-link btn btn-link ${dashboardView === item ? 'active fw-bold text-primary' : 'text-dark'}`}
                                     onClick={() => setDashboardView(item)}
                                 >
-                                    {item === 'Monitoring' && <i className="bi bi-graph-up me-1"></i>}
-                                    {item === 'My Classes' && <i className="bi bi-book me-1"></i>}
-                                    {item === 'Submit Report' && <i className="bi bi-file-earmark-text me-1"></i>}
-                                    {item === 'Courses' && <i className="bi bi-journal-code me-1"></i>}
-                                    {item === 'Reports' && <i className="bi bi-file-text me-1"></i>}
-                                    {item === 'Classes' && <i className="bi bi-collection me-1"></i>}
-                                    {item === 'Lecturers' && <i className="bi bi-people me-1"></i>}
-                                    {item === 'Ratings' && <i className="bi bi-star me-1"></i>}
-                                    {item === 'View Ratings' && <i className="bi bi-star me-1"></i>}
-                                    {item === 'Rate Classes' && <i className="bi bi-star-fill me-1"></i>}
                                     {item}
                                 </button>
                             </li>
@@ -71,7 +55,6 @@ function Navbar({ role, username, dashboardView, setDashboardView, setRole, setU
                         {username && (
                             <div className="me-3">
                                 <span className="navbar-text">
-                                    <i className="bi bi-person-circle me-1"></i>
                                     <strong>{username}</strong>
                                     <span className="badge bg-primary ms-2">{role}</span>
                                 </span>
@@ -81,7 +64,6 @@ function Navbar({ role, username, dashboardView, setDashboardView, setRole, setU
                             className="btn btn-outline-danger btn-sm" 
                             onClick={handleLogout}
                         >
-                            <i className="bi bi-box-arrow-right me-1"></i>
                             Logout
                         </button>
                     </div>

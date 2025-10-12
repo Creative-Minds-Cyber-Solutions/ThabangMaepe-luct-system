@@ -9,7 +9,6 @@ function Classes({ role, userId, department, faculty }) {
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Fetch classes with useCallback to prevent ESLint dependency warnings
     const fetchClasses = useCallback(async () => {
         setLoading(true);
         setError('');
@@ -25,7 +24,6 @@ function Classes({ role, userId, department, faculty }) {
         }
     }, [searchTerm]);
 
-    // Fetch attendance
     const fetchAttendance = useCallback(async () => {
         try {
             const res = await api.get('/attendance');
@@ -35,7 +33,6 @@ function Classes({ role, userId, department, faculty }) {
         }
     }, []);
 
-    // useEffect that depends on role, fetchClasses, and fetchAttendance
     useEffect(() => {
         fetchClasses();
         if (role === 'Student') {
@@ -67,7 +64,6 @@ function Classes({ role, userId, department, faculty }) {
         <div className="classes-container">
             <h4>My Classes</h4>
 
-            {/* SEARCH BAR */}
             <div className="card mb-3 p-3">
                 <div className="row g-2">
                     <div className="col-md-9">
@@ -86,14 +82,14 @@ function Classes({ role, userId, department, faculty }) {
                                 className="btn btn-primary flex-grow-1"
                                 onClick={handleSearch}
                             >
-                                <i className="bi bi-search"></i> Search
+                                Search
                             </button>
                             {searchTerm && (
                                 <button
                                     className="btn btn-secondary"
                                     onClick={handleClearSearch}
                                 >
-                                    <i className="bi bi-x"></i>
+                                    Clear
                                 </button>
                             )}
                         </div>
@@ -140,25 +136,23 @@ function Classes({ role, userId, department, faculty }) {
                                         <strong>Students:</strong> {cls.total_registered} registered
                                     </p>
 
-                                    {/* Student attendance button */}
                                     {role === 'Student' && (
                                         <div className="mt-3">
                                             {attendance.includes(cls.id) ? (
                                                 <button className="btn btn-success w-100" disabled>
-                                                    <i className="bi bi-check-circle"></i> Attendance Marked
+                                                    Attendance Marked
                                                 </button>
                                             ) : (
                                                 <button
                                                     className="btn btn-outline-success w-100"
                                                     onClick={() => handleMarkAttendance(cls.id)}
                                                 >
-                                                    <i className="bi bi-hand-index"></i> Mark Attendance
+                                                    Mark Attendance
                                                 </button>
                                             )}
                                         </div>
                                     )}
 
-                                    {/* Department/Faculty info */}
                                     {role !== 'Student' && cls.department && (
                                         <div className="mt-3">
                                             <span className="badge bg-secondary">

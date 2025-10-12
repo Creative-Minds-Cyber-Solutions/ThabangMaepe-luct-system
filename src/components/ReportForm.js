@@ -56,7 +56,6 @@ function ReportForm({ lecturerId }) {
     setError('');
     setSuccess('');
 
-    // Validation
     if (!form.class_id) {
       setError('Please select a class');
       return;
@@ -81,7 +80,6 @@ function ReportForm({ lecturerId }) {
       
       setSuccess('Report submitted successfully!');
       
-      // Reset form
       setForm({
         class_id: '',
         week_of_reporting: '',
@@ -95,7 +93,6 @@ function ReportForm({ lecturerId }) {
         scheduled_time: ''
       });
 
-      // Scroll to top to see success message
       window.scrollTo(0, 0);
     } catch (err) {
       console.error('Submit report error:', err);
@@ -105,7 +102,7 @@ function ReportForm({ lecturerId }) {
     }
   };
 
-  return (
+return (
     <div className="report-form-container">
       <h4>Submit Lecture Report</h4>
       <p className="text-muted">Fill in all the details about your lecture</p>
@@ -281,9 +278,7 @@ function ReportForm({ lecturerId }) {
                 Submitting...
               </>
             ) : (
-              <>
-                <i className="bi bi-check-circle"></i> Submit Report
-              </>
+              'Submit Report'
             )}
           </button>
           
@@ -307,7 +302,7 @@ function ReportForm({ lecturerId }) {
               setSuccess('');
             }}
           >
-            <i className="bi bi-x-circle"></i> Clear Form
+            Clear Form
           </button>
         </div>
       </form>

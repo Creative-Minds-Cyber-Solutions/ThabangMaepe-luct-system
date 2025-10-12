@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './components/LandingPage';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
@@ -23,25 +24,13 @@ function App() {
             <div className="d-flex flex-column min-vh-100 App">
                 <div className="flex-grow-1">
                     <Routes>
-                        {/* Login route */}
+                        {/* Landing Page*/}
                         <Route
                             path="/"
-                            element={isLoggedIn ? (
-                                <Navigate to="/dashboard" />
-                            ) : (
-                                <div className="login-container card-container">
-                                    <Login
-                                        setRole={setRole}
-                                        setUserId={setUserId}
-                                        setUsername={setUsername}
-                                        setDepartment={setDepartment}
-                                        setFaculty={setFaculty}
-                                    />
-                                </div>
-                            )}
+                            element={isLoggedIn ? <Navigate to="/dashboard" /> : <LandingPage />}
                         />
 
-                        {/* Login (explicit path) */}
+                        {/* Login */}
                         <Route
                             path="/login"
                             element={isLoggedIn ? (
@@ -85,12 +74,13 @@ function App() {
                                     setUserId={setUserId}
                                 />
                             ) : (
-                                <Navigate to="/" />
+                                <Navigate to="/login" />
                             )}
                         />
                     </Routes>
                 </div>
-                <Footer />
+                {/* Only show footer on landing page */}
+                {!isLoggedIn && window.location.pathname === '/' && <Footer />}
             </div>
         </Router>
     );

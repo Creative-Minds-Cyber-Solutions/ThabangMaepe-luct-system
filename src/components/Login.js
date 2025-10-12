@@ -1,4 +1,3 @@
-// src/components/Login.js
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api';
@@ -19,12 +18,9 @@ function Login({ setRole, setUserId, setUsername, setDepartment, setFaculty }) {
 
     setLoading(true);
     try {
-      // No need to convert password to string here, api.js handles it
       const res = await api.post('/auth/login', { username, password });
-
       const { token, role, id, username: name, department, faculty } = res.data;
 
-      // Save to localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
       localStorage.setItem('userId', id);
@@ -32,7 +28,6 @@ function Login({ setRole, setUserId, setUsername, setDepartment, setFaculty }) {
       localStorage.setItem('department', department);
       localStorage.setItem('faculty', faculty);
 
-      // Update parent states
       setRole(role);
       setUserId(id);
       setUsername(name);
@@ -49,6 +44,12 @@ function Login({ setRole, setUserId, setUsername, setDepartment, setFaculty }) {
 
   return (
     <div className="login-page d-flex flex-column justify-content-center align-items-center vh-100">
+       <div className="mb-3">
+        <Link to="/" className="btn btn-outline-secondary">
+          Back to Home
+        </Link>
+      </div>
+      
       <div className="logo-container text-center mb-3">
         <img src="/logo-dark.png" alt="LUCT Logo" />
       </div>
@@ -77,11 +78,7 @@ function Login({ setRole, setUserId, setUsername, setDepartment, setFaculty }) {
           />
         </div>
 
-        <button
-          className="btn btn-primary w-100"
-          onClick={handleLogin}
-          disabled={loading}
-        >
+        <button className="btn btn-primary w-100" onClick={handleLogin} disabled={loading}>
           {loading ? 'Logging in...' : 'Login'}
         </button>
 

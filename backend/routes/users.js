@@ -26,7 +26,7 @@ router.get('/', authenticateToken, authorizeRoles('PL', 'PRL'), async (req, res)
             params.push(role);
         }
 
-        // SEARCH functionality (extra credit)
+        // SEARCH functionality
         if (search) {
             query += ' AND (username LIKE ? OR faculty LIKE ? OR department LIKE ?)';
             const searchTerm = `%${search}%`;

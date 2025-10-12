@@ -7,8 +7,6 @@ function Reports({ role, department, faculty }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [feedback, setFeedback] = useState({});
-
-    // SEARCH & FILTER STATES (Extra Credit)
     const [searchTerm, setSearchTerm] = useState('');
     const [filters, setFilters] = useState({
         week: '',
@@ -25,7 +23,6 @@ function Reports({ role, department, faculty }) {
         setError('');
 
         try {
-            // Build query parameters
             const params = new URLSearchParams();
             if (searchTerm) params.append('search', searchTerm);
             if (filters.week) params.append('week', filters.week);
@@ -71,7 +68,6 @@ function Reports({ role, department, faculty }) {
         }
     };
 
-    // EXCEL EXPORT (Extra Credit)
     const handleExportExcel = async () => {
         try {
             const params = new URLSearchParams();
@@ -82,7 +78,6 @@ function Reports({ role, department, faculty }) {
                 responseType: 'blob'
             });
 
-            // Create download link
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -101,16 +96,14 @@ function Reports({ role, department, faculty }) {
         <div className="reports-container">
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h4>Lecture Reports</h4>
-                {/* EXCEL EXPORT BUTTON (Extra Credit) */}
                 <button
                     className="btn btn-success btn-sm"
                     onClick={handleExportExcel}
                 >
-                    <i className="bi bi-file-excel"></i> Export to Excel
+                    Export to Excel
                 </button>
             </div>
 
-            {/* SEARCH BAR (Extra Credit) */}
             <div className="card mb-3 p-3">
                 <div className="row g-2">
                     <div className="col-md-6">
@@ -153,10 +146,10 @@ function Reports({ role, department, faculty }) {
                 </div>
                 <div className="mt-2">
                     <button className="btn btn-primary btn-sm me-2" onClick={handleSearch}>
-                        <i className="bi bi-search"></i> Search
+                        Search
                     </button>
                     <button className="btn btn-secondary btn-sm" onClick={handleClearFilters}>
-                        <i className="bi bi-x-circle"></i> Clear Filters
+                        Clear Filters
                     </button>
                 </div>
             </div>
@@ -184,13 +177,10 @@ function Reports({ role, department, faculty }) {
                                         {report.course_name} ({report.course_code})
                                     </h6>
                                     <p className="mb-1">
-                                        <strong>Class:</strong> {report.class_name} |{' '}
-                                        <strong>Lecturer:</strong> {report.lecturer_name}
+                                        <strong>Class:</strong> {report.class_name} | <strong>Lecturer:</strong> {report.lecturer_name}
                                     </p>
                                     <p className="mb-1">
-                                        <strong>Date:</strong> {new Date(report.date_of_lecture).toLocaleDateString()} |{' '}
-                                        <strong>Venue:</strong> {report.venue} |{' '}
-                                        <strong>Time:</strong> {report.scheduled_time}
+                                        <strong>Date:</strong> {new Date(report.date_of_lecture).toLocaleDateString()} | <strong>Venue:</strong> {report.venue} | <strong>Time:</strong> {report.scheduled_time}
                                     </p>
                                 </div>
                                 <span className="badge bg-success">
@@ -224,7 +214,6 @@ function Reports({ role, department, faculty }) {
                                     <p className="text-muted fst-italic mb-0">No feedback yet</p>
                                 )}
 
-                                {/* PRL and PL can add feedback */}
                                 {(role === 'PRL' || role === 'PL') && (
                                     <div className="mt-2">
                                         <div className="input-group">

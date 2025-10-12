@@ -18,7 +18,6 @@ function Courses({ role, department }) {
         lecturer_id: ''
     });
 
-    // Fetch courses with useCallback to prevent ESLint warnings
     const fetchCourses = useCallback(async () => {
         setLoading(true);
         setError('');
@@ -35,7 +34,6 @@ function Courses({ role, department }) {
         }
     }, [searchTerm]);
 
-    // Fetch lecturers
     const fetchLecturers = useCallback(async () => {
         try {
             const res = await api.get('/users/lecturers');
@@ -45,7 +43,6 @@ function Courses({ role, department }) {
         }
     }, []);
 
-    // Run effects safely with proper dependencies
     useEffect(() => {
         fetchCourses();
         if (role === 'PL' || role === 'PRL') {
@@ -105,12 +102,11 @@ function Courses({ role, department }) {
                         className="btn btn-primary"
                         onClick={() => setShowForm(!showForm)}
                     >
-                        <i className="bi bi-plus-circle"></i> {showForm ? 'Cancel' : 'Add Course'}
+                        {showForm ? 'Cancel' : 'Add Course'}
                     </button>
                 )}
             </div>
 
-            {/* ADD COURSE FORM (PL only) */}
             {role === 'PL' && showForm && (
                 <div className="card mb-3 p-3">
                     <h5>Add New Course</h5>
@@ -170,7 +166,7 @@ function Courses({ role, department }) {
                             </div>
                             <div className="col-12">
                                 <button type="submit" className="btn btn-success">
-                                    <i className="bi bi-check-circle"></i> Add Course
+                                    Add Course
                                 </button>
                             </div>
                         </div>
@@ -178,7 +174,6 @@ function Courses({ role, department }) {
                 </div>
             )}
 
-            {/* SEARCH BAR */}
             <div className="card mb-3 p-3">
                 <div className="row g-2">
                     <div className="col-md-9">
@@ -197,14 +192,14 @@ function Courses({ role, department }) {
                                 className="btn btn-primary flex-grow-1"
                                 onClick={handleSearch}
                             >
-                                <i className="bi bi-search"></i> Search
+                                Search
                             </button>
                             {searchTerm && (
                                 <button
                                     className="btn btn-secondary"
                                     onClick={handleClearSearch}
                                 >
-                                    <i className="bi bi-x"></i>
+                                    Clear
                                 </button>
                             )}
                         </div>
@@ -214,7 +209,6 @@ function Courses({ role, department }) {
 
             {error && <div className="alert alert-danger">{error}</div>}
 
-            {/* COURSES LIST */}
             {loading ? (
                 <div className="text-center py-4">
                     <div className="spinner-border" role="status">

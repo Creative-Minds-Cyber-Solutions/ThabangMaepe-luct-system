@@ -101,7 +101,6 @@ function Dashboard({ role, userId, username, department, faculty, setRole, setUs
 
                 <hr />
 
-                {/* Quick Menu Buttons */}
                 <div className="d-flex flex-wrap gap-2 mb-4">
                     {menuItems[role]?.map((item) => (
                         <button
@@ -114,7 +113,6 @@ function Dashboard({ role, userId, username, department, faculty, setRole, setUs
                     ))}
                 </div>
 
-                {/* Main Content Area */}
                 <div className="dashboard-content">
                     {renderComponent()}
                 </div>
@@ -123,7 +121,7 @@ function Dashboard({ role, userId, username, department, faculty, setRole, setUs
     );
 }
 
-// Simple Lecturers Component (for PL)
+// Lecturers Component (for PL)
 function Lecturers({ role }) {
     const [lecturers, setLecturers] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
@@ -155,7 +153,6 @@ function Lecturers({ role }) {
         <div>
             <h4>Lecturers Management</h4>
             
-            {/* Search */}
             <div className="card mb-3 p-3">
                 <div className="row g-2">
                     <div className="col-md-9">
@@ -170,7 +167,7 @@ function Lecturers({ role }) {
                     </div>
                     <div className="col-md-3">
                         <button className="btn btn-primary w-100" onClick={fetchLecturers}>
-                            <i className="bi bi-search"></i> Search
+                            Search
                         </button>
                     </div>
                 </div>
