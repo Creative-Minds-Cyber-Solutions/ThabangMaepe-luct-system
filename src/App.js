@@ -79,8 +79,9 @@ function App() {
                         />
                     </Routes>
                 </div>
-                {/* Only show footer on landing page */}
-                {!isLoggedIn && window.location.pathname === '/' && <Footer />}
+                
+                {/* Show footer on ALL pages */}
+                <Footer />
             </div>
         </Router>
     );
